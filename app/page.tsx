@@ -23,7 +23,7 @@ export default function Home() {
       />
 
       {/* Capa de matiz gris institucional */}
-      <div className="absolute inset-0 bg-[#d2d3d5]/40 pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[#d2d3d5]/20 pointer-events-none z-0" />
 
 
       {/* ------------------------------------------------------------- */}
@@ -40,12 +40,12 @@ export default function Home() {
               
               {/* Texto Principal */}
               <div className="space-y-6 text-center lg:text-left">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-600/20 text-red-400 border border-red-500/30">
+                {/*<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-600/20 text-red-400 border border-red-500/30">
                   <Sparkles className="w-3.5 h-3.5" /> Admisiones Abiertas 2026
-                </span>
+                </span>*/}
                 
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-                  Formando líderes con <span className="text-red-500">valores</span> y excelencia
+                  Formando líderes con valores y excelencia
                 </h1>
                 
                 <p className="text-base sm:text-lg text-gray-300 max-w-xl mx-auto lg:mx-0">
@@ -54,12 +54,12 @@ export default function Home() {
                 
                 {/* Botones de Acción */}
                 <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                  <Link
+                  {/*<Link
                     href="/admisiones"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition-all"
                   >
                     Proceso de Admisión <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  </Link>*/}
                   <Link
                     href="/colegio"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-lg border border-blue-800 transition-all"
@@ -71,8 +71,8 @@ export default function Home() {
 
               {/* Tarjeta Visual Destacada */}
               <div className="relative flex justify-center">
-                <div className="relative w-full max-w-md bg-gradient-to-br from-blue-900 to-blue-950 p-2 rounded-2xl shadow-2xl border border-blue-800">
-                  <div className="bg-white rounded-xl p-6 text-gray-800 space-y-4">
+                <div className="relative w-full max-w-md  p-2 rounded-2xl  border border-grey-800">
+                  <div className="bg-white/80 rounded-xl p-6 text-gray-800 space-y-4">
                     <div className="flex items-center justify-between border-b pb-4">
                       <div className="flex items-center gap-3">
                         <div className="p-3 bg-red-50 text-red-600 rounded-lg">
