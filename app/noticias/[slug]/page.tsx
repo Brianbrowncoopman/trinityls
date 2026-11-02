@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic';
 
-export default async function NoticiaDetallePage({
-  params,
-}: {
+interface PageProps {
   params: Promise<{ slug: string }>;
-}) {
+}
+
+export default async function NoticiaDetallePage({ params }: PageProps) {
   const { slug } = await params;
 
   return (
