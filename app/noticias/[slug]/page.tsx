@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function NoticiaDetallePage({ params }: PageProps) {
+async function NoticiaContent({ params }: PageProps) {
   const { slug } = await params;
 
   return (
@@ -10,5 +12,13 @@ export default async function NoticiaDetallePage({ params }: PageProps) {
       <h1 className="text-3xl font-bold text-blue-950">Noticia: {slug}</h1>
       <p className="mt-2 text-gray-700">Contenido detallado de la noticia...</p>
     </div>
+  );
+}
+
+export default function NoticiaDetallePage(props: PageProps) {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Cargando noticia...</div>}>
+      <NoticiaContent {...props} />
+    </Suspense>
   );
 }
