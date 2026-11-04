@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Colegio Trinity',
   description: 'Comunidad educativa orientada a la excelencia y valores.',
+  icons: {
+    icon: '/images/logotrinity.png', // Cambia esta ruta por la ubicación de tu logo
+  },
 };
 
 export default function RootLayout({

@@ -12,7 +12,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-blue-950 text-gray-300 pt-6 pb-4 border-t border-blue-900">
+    <footer className="bg-blue-900 text-gray-300 pt-6 pb-4 border-t border-blue-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Grilla distribuida exactamente en 3 columnas */}
