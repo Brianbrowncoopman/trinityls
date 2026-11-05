@@ -45,9 +45,9 @@ export default function ColegioPage() {
       
       {/* Cabecera de la Sección */}
       <div className="text-center max-w-3xl mx-auto space-y-4">
-        <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-red-600/10 text-red-600 border border-red-200">
+        {/*<span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-red-600/10 text-red-600 border border-red-200">
           Documentos Institucionales
-        </span>
+        </span>*/}
         <h1 className="text-3xl sm:text-4xl font-bold text-blue-950 tracking-tight">
           Nuestro Colegio
         </h1>
@@ -60,10 +60,14 @@ export default function ColegioPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {documents.map((doc, index) => {
           const IconComponent = doc.icon;
+          const isLastItem = index === documents.length - 1; // Detecta el último elemento (impar)
+          
           return (
             <div 
               key={index} 
-              className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-all flex flex-col justify-between space-y-6"
+              className={`bg-white/85 p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-md hover:shadow-lg transition-all flex flex-col justify-between space-y-6 ${
+                isLastItem ? 'md:col-span-2 md:max-w-xl md:mx-auto md:w-full' : ''
+              }`}
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">

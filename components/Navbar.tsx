@@ -15,7 +15,8 @@ export default function Navbar() {
     { name: 'Noticias', href: '/noticias' },
     { name: 'Contacto', href: '/contacto' },
     { name : 'Pagos', href: '/pagos'},
-    { name: 'Corporacion', href: '/corporacion'}
+    { name: 'Corporacion', href: '/corporacion'},
+    {name: 'Admin', href:'/admin/noticias'}
   ];
 
   return (
@@ -68,9 +69,9 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Menú Desplegable Móvil (Sin fondo blanco, dejando ver la foto de fondo) */}
+      {/* Menú Desplegable Móvil (Semi-transparente para ver el fondo con excelente lectura) */}
       {isOpen && (
-        <div className="md:hidden bg-trasnsparent text-gray-200 border-b border-blue-900 px-4 pt-2 pb-6 space-y-3 shadow-xl">
+        <div className="md:hidden bg-blue-900 text-gray-200 border-b border-blue-900 px-4 pt-2 pb-6 space-y-3 shadow-xl backdrop-blur-sm">
           <div className="flex flex-col space-y-1">
             {navLinks.map((link) => (
               <Link
@@ -89,7 +90,7 @@ export default function Navbar() {
             <Link
               href="/admisiones"
               onClick={() => setIsOpen(false)}
-              className="block w-full text-center bg-red-600 text-white text-base font-semibold py-3 rounded-lg shadow hover:bg-red-700 transition-colors"
+              className="block w-full text-center bg-red-600/50 text-white text-base font-semibold py-3 rounded-lg shadow hover:bg-red-700 transition-colors"
             >
               Postula Aquí / Admisiones
             </Link>
