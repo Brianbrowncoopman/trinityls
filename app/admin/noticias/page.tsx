@@ -1,23 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { PlusCircle, Trash2, Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react';
-
-// Si ya tienes tu Firebase configurado:
-// import { db, storage } from '@/lib/firebase';
-// import { collection, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-// import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { PlusCircle, Image as ImageIcon, CheckCircle, AlertCircle } from 'lucide-react';
+import { db, storage } from '../../../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export default function AdminNoticiasPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [monthBadge, setMonthBadge] = useState('ABR');
-  const [dayBadge, setDayBadge] = useState('16');
+  const [monthBadge, setMonthBadge] = useState('NOV');
+  const [dayBadge, setDayBadge] = useState('05');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Función para convertir títulos en Slugs amigables (ej: "Pruebas Pendientes" -> "pruebas-pendientes")
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
@@ -36,20 +33,22 @@ export default function AdminNoticiasPage() {
 
     setLoading(true);
     setMessage(null);
+    console.log('1. Iniciando proceso de publicación...');
 
     try {
-      let imageUrl = '/images/logotrinity.png'; // Imagen por defecto
+      let imageUrl = 'https://firebasestorage.googleapis.com/v0/b/trinity-48be3.firebasestorage.app/o/WhatsApp%20Image%202026-10-24%20at%204.14.32%20PM.jpeg?alt=media&token=0e19d5c9-9972-4c8a-bdfb-c5db477d6460';
 
-      // 1. Subir imagen a Firebase Storage (si seleccionó archivo)
-      /*
       if (imageFile) {
-        const imageRef = ref(storage, `noticias/${Date.now()}_${imageFile.name}`);
-        await uploadBytes(imageRef, imageFile);
-        imageUrl = await getDownloadURL(imageRef);
+        console.log('2. Intentando subir imagen a Storage...');
+        try {
+          const imageRef = ref(storage, `noticias/${Date.now()}_${imageFile.name}`);
+          await uploadBytes(imageRef, imageFile);
+          imageUrl = await getDownloadURL(imageRef);
+        } catch (storageError) {
+          console.warn('Aviso: Falló Storage (CORS), usando imagen por defecto.');
+        }
       }
-      */
 
-      // 2. Crear documento en Firestore
       const slug = generateSlug(title);
       const newNews = {
         title,
@@ -60,22 +59,33 @@ export default function AdminNoticiasPage() {
         dayBadge,
         author: 'colegiotrinity',
         imageUrl,
-        // createdAt: serverTimestamp(),
+        createdAt: new Date().toISOString(),
       };
 
-      // await addDoc(collection(db, 'noticias'), newNews);
+      console.log('4. Enviando datos a Firestore...', newNews);
 
+      // Creamos una promesa con límite de tiempo de 8 segundos para evitar que se quede colgado
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Tiempo de espera agotado al conectar con Firestore')), 8000)
+      );
+
+      await Promise.race([
+        addDoc(collection(db, 'noticias'), newNews),
+        timeoutPromise
+      ]);
+
+      console.log('5. ¡Documento guardado en Firestore correctamente!');
       setMessage({ type: 'success', text: '¡Noticia publicada con éxito!' });
       
-      // Limpiar formulario
       setTitle('');
       setContent('');
       setImageFile(null);
-    } catch (err) {
-      console.error(err);
-      setMessage({ type: 'error', text: 'Ocurrió un error al guardar la noticia.' });
+    } catch (err: any) {
+      console.error('❌ Error detallado:', err);
+      setMessage({ type: 'error', text: `Error al guardar: ${err.message || 'Comueba tu conexión'}` });
     } finally {
       setLoading(false);
+      console.log('6. Fin del proceso.');
     }
   };
 
@@ -91,7 +101,7 @@ export default function AdminNoticiasPage() {
         <span className="bg-red-600 text-xs px-3 py-1 rounded-full font-semibold">Admin</span>
       </div>
 
-      {/* Formulario para Subir / Crear Noticia */}
+      {/* Formulario */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-md space-y-6">
         <h2 className="text-xl font-bold text-blue-950 flex items-center gap-2">
           <PlusCircle className="w-5 h-5 text-red-600" /> Publicar Nueva Noticia
@@ -108,7 +118,6 @@ export default function AdminNoticiasPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           
-          {/* Título de la noticia */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Título de la Noticia</label>
             <input 
@@ -121,7 +130,6 @@ export default function AdminNoticiasPage() {
             />
           </div>
 
-          {/* Fecha (Mes / Día) */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Mes (Abreviado)</label>
@@ -130,7 +138,7 @@ export default function AdminNoticiasPage() {
                 maxLength={3}
                 value={monthBadge}
                 onChange={(e) => setMonthBadge(e.target.value)}
-                placeholder="ABR"
+                placeholder="NOV"
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 uppercase focus:ring-2 focus:ring-blue-950 outline-none text-gray-900"
               />
             </div>
@@ -141,15 +149,14 @@ export default function AdminNoticiasPage() {
                 maxLength={2}
                 value={dayBadge}
                 onChange={(e) => setDayBadge(e.target.value)}
-                placeholder="16"
+                placeholder="05"
                 className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-950 outline-none text-gray-900"
               />
             </div>
           </div>
 
-          {/* Subir Imagen */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Imagen de la Noticia</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Imagen de la Noticia (Opcional en pruebas)</label>
             <div className="flex items-center gap-4 border border-dashed border-gray-300 p-4 rounded-lg bg-gray-50">
               <ImageIcon className="w-8 h-8 text-gray-400" />
               <input 
@@ -161,7 +168,6 @@ export default function AdminNoticiasPage() {
             </div>
           </div>
 
-          {/* Contenido Completo */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Cuerpo / Contenido Detallado</label>
             <textarea 
@@ -174,13 +180,12 @@ export default function AdminNoticiasPage() {
             />
           </div>
 
-          {/* Botón Guardar */}
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition-colors disabled:opacity-50"
           >
-            {loading ? 'Publicando...' : 'Publicar Noticia'}
+            {loading ? 'Publicando en Firestore...' : 'Publicar Noticia'}
           </button>
         </form>
       </div>
